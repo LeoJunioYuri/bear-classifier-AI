@@ -15,47 +15,70 @@ const ImageInput = ({ onImageChange }) => {
     if (file) {
       // Create a URL object for the image
       const url = URL.createObjectURL(file);
-      // Update the image element with the URL
-      imageRef.current.src = url;
+
       // Wait for the image element to load
       await new Promise((resolve) => {
-        imageRef.current.onload = resolve;
+        // Create a new image element
+        const newImage = new Image();
+        newImage.onload = () => {
+          resolve();
+          // Call the callback function with the new image element
+          onImageChange(newImage);
+        };
+        // Set the src property of the new image element
+        newImage.src = url;
       });
-      // Call the callback function with the image element
-      onImageChange(imageRef.current);
     }
   };
 
   return (
-    <div>
+    <div style={{ marginBottom: '1rem' }}>
       <input
         type="file"
         accept="image/*"
+        id="imageInput"
         ref={inputRef}
         onChange={handleChange}
+        style={{ position: 'absolute', top: '-9999px' }}
       />
-      <img ref={imageRef} width="300" alt="Selected" />
+      <label
+        htmlFor="imageInput"
+        style={{
+          border: '1px solid #ced4da',
+          padding: '0.375rem 0.75rem',
+          cursor: 'pointer',
+          borderRadius: '0.25rem',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        Select an Image
+      </label>
+      {imageRef.current && (
+        <img
+          ref={imageRef}
+          alt="Uploaded Image Preview"
+          style={{ marginTop: '0.5rem', maxWidth: '200px' }}
+        />
+      )}
     </div>
   );
 };
 
+
 // A component that renders the classification result using a text element
 const ClassificationResult = ({ result }) => {
   if (result) {
-    // Extract class and confidence from the result
     const { className, probability } = result;
-    // Convert confidence to percentage
     const percentage = (probability * 100).toFixed(2);
-    // Return a text element with class and confidence
     return (
-      <p>
+      <p style={{ textAlign: 'center', fontSize: '1.5rem' }}>
         The image is a <b>{className}</b> with <b>{percentage}%</b> confidence.
       </p>
     );
-  } else {
-    // Return an empty text element
-    return <p></p>;
   }
+
+  return <p style={{ textAlign: 'center' }}>Select an image to classify.</p>;
 };
 
 // The main component of the page
@@ -64,6 +87,10 @@ const Home = () => {
   const [model, setModel] = useState(null);
   // Create state to store the classification result
   const [result, setResult] = useState(null);
+  const [image, setImage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // A function that loads the MobileNet model using the tf.loadGraphModel function
   const loadModel = async () => {
@@ -99,17 +126,22 @@ const Home = () => {
   useEffect(handleMount, []);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto p-8 bg-gray-800 rounded shadow-lg">
-        <h1 className="text-3xl font-bold mb-4 text-gray-200">Bear Classifier</h1>
-        <h2 className="text-xl text-gray-400 mb-4">By Leo to Ana S2</h2>
-        <h2 className="text-xl text-gray-400 mb-4">A primeira imagem não gera classificação (preciso resolver esse bug)</h2>
-        <p className="text-gray-300 mb-6">
-          Select an image of a bear or a teddy bear and see the classification result.
-        </p>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', justifyContent: 'space-between' }}>
+      <div style={{ margin: 'auto', padding: '2rem', borderRadius: '0.5rem', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: isDarkMode ? '#343a40' : '#fff', color: isDarkMode ? '#fff' : '#000' }}>
+        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>Bear Classifier</h1>
         <ImageInput onImageChange={classifyImage} />
-        <ClassificationResult result={result} />
+        <ClassificationResult result={result} isProcessing={isProcessing} error={error} />
+        <button onClick={() => setIsDarkMode(!isDarkMode)} style={{ marginTop: '1rem', padding: '0.375rem 0.75rem', border: '1px solid #6c757d', borderRadius: '0.25rem', cursor: 'pointer', backgroundColor: isDarkMode ? '#6c757d' : '#fff', color: isDarkMode ? '#fff' : '#000' }}>
+          {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
       </div>
+      <footer style={{ textAlign: 'center', marginTop: '1rem', padding: '1rem', backgroundColor: isDarkMode ? '#343a40' : '#f8f9fa', borderTop: '1px solid #ced4da', color: isDarkMode ? '#fff' : '#000' }}>
+        <p>By Leo to Ana <span role="img" aria-label="heart">❤️</span> S2</p>
+        <p>
+          LinkedIn:
+          <a href="https://www.linkedin.com/in/leojunioy" target="_blank" rel="noopener noreferrer" style={{ marginLeft: '0.5rem', color: isDarkMode ? '#fff' : '#000' }}>Leonardo Basso</a>
+        </p>
+      </footer>
     </div>
   );
 };
