@@ -136,7 +136,7 @@ const Home = () => {
         </button>
       </div>
       <footer style={{ textAlign: 'center', marginTop: '1rem', padding: '1rem', backgroundColor: isDarkMode ? '#343a40' : '#f8f9fa', borderTop: '1px solid #ced4da', color: isDarkMode ? '#fff' : '#000' }}>
-        <p>By Leo to Ana <span role="img" aria-label="heart">❤️</span> S2</p>
+        <p>By Leo to Ana <span role="img" aria-label="heart">❤️</span></p>
         <p>
           LinkedIn:
           <a href="https://www.linkedin.com/in/leojunioy" target="_blank" rel="noopener noreferrer" style={{ marginLeft: '0.5rem', color: isDarkMode ? '#fff' : '#000' }}>Leonardo Basso</a>
