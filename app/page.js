@@ -4,10 +4,11 @@ import * as tf from "@tensorflow/tfjs";
 import * as mobilenet from "@tensorflow-models/mobilenet";
 
 // A component that renders an image input button and an image element
+// A component that renders an image input button and an image element
 const ImageInput = ({ onImageChange, classifyImage }) => {
   const inputRef = useRef();
-  const imageRef = useRef();
   const [hasImage, setHasImage] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
 
   const handleChange = async (event) => {
     const file = event.target.files[0];
@@ -18,14 +19,22 @@ const ImageInput = ({ onImageChange, classifyImage }) => {
         const newImage = new Image();
         newImage.onload = () => {
           onImageChange(newImage);
-          imageRef.current.src = url;
           classifyImage(newImage);
           setHasImage(true);
           resolve();
         };
         newImage.src = url;
       });
+
+      // Set the image source using the state variable
+      setImageSrc(url);
     }
+  };
+
+  const handleRemoveImage = () => {
+    setHasImage(false);
+    onImageChange(null);
+    setImageSrc(null);
   };
 
   return (
@@ -49,16 +58,24 @@ const ImageInput = ({ onImageChange, classifyImage }) => {
           zIndex: 1,
         }}
       >
-        {hasImage ? "Change Image" : "Select an Image"} {/* Change text based on hasImage state */}
+        {hasImage ? "Change Image" : "Select an Image"}
       </label>
-      <img
-        ref={imageRef}
-        alt="Uploaded Image Preview"
-        style={{ marginTop: "0.5rem", maxWidth: "200px" }}
-      />
+      {hasImage && (
+        <div>
+          {/* Use a callback ref for the image element */}
+          <img
+            ref={(ref) => (ref ? (inputRef.current = ref) : null)}
+            alt="Uploaded Image Preview"
+            src={imageSrc}
+            style={{ marginTop: "0.5rem", maxWidth: "200px" }}
+          />
+          <button onClick={handleRemoveImage}>Remove Image</button>
+        </div>
+      )}
     </div>
   );
 };
+
 
 // A component that renders the classification result using a text element
 const ClassificationResult = ({ result }) => {
