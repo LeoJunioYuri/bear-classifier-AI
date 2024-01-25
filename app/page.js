@@ -172,10 +172,15 @@ const Home = () => {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           backgroundColor: isDarkMode ? "#343a40" : "#fff",
           color: isDarkMode ? "#fff" : "#000",
+          transition: "background-color 0.3s, color 0.3s", // Add transition
         }}
       >
         <h1
-          style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}
+          style={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            marginBottom: "1rem",
+          }}
         >
           Bear Classifier
         </h1>
@@ -191,6 +196,14 @@ const Home = () => {
             cursor: "pointer",
             backgroundColor: isDarkMode ? "#6c757d" : "#fff",
             color: isDarkMode ? "#fff" : "#000",
+            transition: "background-color 0.3s, color 0.3s, box-shadow 0.3s", // Add transition and shadow
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Initial shadow
+          }}
+          onMouseOver={(e) => {
+            e.target.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)"; // Shadow on hover
+          }}
+          onMouseOut={(e) => {
+            e.target.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)"; // Reset shadow
           }}
         >
           {isDarkMode ? "Light Mode" : "Dark Mode"}
