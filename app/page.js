@@ -4,7 +4,6 @@ import * as tf from "@tensorflow/tfjs";
 import * as mobilenet from "@tensorflow-models/mobilenet";
 
 // A component that renders an image input button and an image element
-// A component that renders an image input button and an image element
 const ImageInput = ({ onImageChange, classifyImage }) => {
   const inputRef = useRef();
   const [hasImage, setHasImage] = useState(false);
@@ -56,6 +55,8 @@ const ImageInput = ({ onImageChange, classifyImage }) => {
           borderRadius: "0.25rem",
           position: "relative",
           zIndex: 1,
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          transition: "background-color 0.3s, box-shadow 0.3s"
         }}
       >
         {hasImage ? "Change Image" : "Select an Image"}
@@ -141,7 +142,7 @@ const Home = () => {
     const loadedModel = await loadModel();
     // Set the model in the state
     setModel(loadedModel);
-    // Now you can perform any initialization that depends on the model being loaded
+    // can perform any initialization that depends on the model being loaded
   };
 
   useEffect(() => {
@@ -172,7 +173,7 @@ const Home = () => {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           backgroundColor: isDarkMode ? "#343a40" : "#fff",
           color: isDarkMode ? "#fff" : "#000",
-          transition: "background-color 0.3s, color 0.3s", // Add transition
+          transition: "background-color 0.3s, color 0.3s",
         }}
       >
         <h1
