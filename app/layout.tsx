@@ -9,13 +9,6 @@ export const metadata: Metadata = {
   description: 'An intelligent image classifier for distinguishing between various bear species and teddy bears. Powered by machine learning, this web app uses advanced algorithms to analyze and categorize uploaded images with high accuracy.',
 };
 
-export function HeadLayout() {
-  return (
-    <head>
-      {/* Include meta tags, links, and other head elements */}
-    </head>
-  );
-}
 
 export function BodyLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -32,7 +25,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <HeadLayout />
       <BodyLayout>{children}</BodyLayout>
     </html>
   );
